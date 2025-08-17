@@ -59,7 +59,11 @@ public class StudentService {
             throw new ApiException("student not found");
         }
         oldStudent.setMajor(major);
-        oldStudent.setCourses(null);
+        for(Course c : oldStudent.getCourses()){
+            Course course = courseRepository.findCourseById(c.getId());
+            course.getStudents().remove(oldStudent);
+            courseRepository.save(c);
+            }
         studentRepository.save(oldStudent);
     }
 
@@ -71,5 +75,7 @@ public class StudentService {
         }
         course.getStudents().add(student);
         courseRepository.save(course);
+        student.getCourses().add(course);
+        studentRepository.save(student);
     }
 }
