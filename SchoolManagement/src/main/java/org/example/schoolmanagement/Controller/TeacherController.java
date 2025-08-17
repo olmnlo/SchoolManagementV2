@@ -46,4 +46,10 @@ public class TeacherController {
     public ResponseEntity<Teacher> getTeacherInformation(@PathVariable Integer teacher_id){
         return ResponseEntity.status(HttpStatus.OK).body(teacherService.teacherInformation(teacher_id));
     }
+
+    @PutMapping("/{teacher_id}/course/{course_id}")
+    public ResponseEntity<ApiResponse> assignCourseToTeacher(@PathVariable Integer course_id,@PathVariable Integer teacher_id){
+        teacherService.assignCourseToTeacher(course_id, teacher_id);
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("assigned successfully"));
+    }
 }

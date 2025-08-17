@@ -2,7 +2,10 @@ package org.example.schoolmanagement.Service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.schoolmanagement.Api.ApiException;
+import org.example.schoolmanagement.DTO.TeacherDTO;
+import org.example.schoolmanagement.Model.Course;
 import org.example.schoolmanagement.Model.Teacher;
+import org.example.schoolmanagement.Repository.CourseRepository;
 import org.example.schoolmanagement.Repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,7 @@ import java.util.List;
 public class TeacherService {
 
     private final TeacherRepository teacherRepository;
+    private final CourseRepository courseRepository;
 
     public List<Teacher> findAllTeachers(){
         List<Teacher> teachers = teacherRepository.findAll();
@@ -54,5 +58,16 @@ public class TeacherService {
             throw new ApiException("teacher not found");
         }
         return teacher;
+    }
+
+
+    public void assignCourseToTeacher(Integer course_id, Integer teacher_id){
+        Teacher teacher = teacherRepository.findTeacherById(teacher_id);
+        Course course = courseRepository.findCourseById(course_id);
+        if (teacher == null || course == null){
+            throw new ApiException("cannot assign");
+        }
+        course.setTeacher(teacher);
+        courseRepository.save(course);
     }
 }
